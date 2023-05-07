@@ -2,6 +2,8 @@ import Wrapper from "./components/Wrapper.tsx";
 import Screen from "./components/Screen.tsx";
 import ButtonBox from "./components/ButtonBox.tsx";
 import Button from "./components/Button.tsx";
+import "./App.css";
+import { useState } from "react";
 
 function App() {
   const buttons = [
@@ -12,18 +14,23 @@ function App() {
     [0, ".", "="],
   ];
 
+  let [screenValue, setScreenValue] = useState(0);
+  const handleClick = (value) => {
+    setScreenValue(value);
+  };
+
   return (
     <>
       <Wrapper>
-        <Screen />
+        <Screen value={screenValue} />
         <ButtonBox>
           {buttons.flat().map((button) => {
             return (
               <Button
-                className="button"
+                className={button === "=" ? "equals" : ""}
                 value={button}
                 onClick={() => {
-                  console.log("Clicked");
+                  handleClick(button);
                 }}
               />
             );
