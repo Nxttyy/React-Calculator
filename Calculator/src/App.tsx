@@ -20,6 +20,7 @@ function App() {
     // if (!calc.sign && calc.num) {
     //   setCalc({ ...calc, num: value });
     // }
+
     setCalc({
       ...calc,
       num: Number(String(calc.num) + String(value)),
@@ -62,12 +63,26 @@ function App() {
     }
   };
 
+  const invertClickHandler = () => {
+    setCalc({ ...calc, num: calc.num * -1 });
+  };
+
+  const percentClickHandler = () => {
+    setCalc({ ...calc, num: calc.num / 100 });
+  };
+
+  const commaClickHandler = () => {
+    if (!String(calc.num).includes(".")) {
+      setCalc({ ...calc, num: String(calc.num) + "." });
+    }
+  };
+
   return (
     <>
       <Wrapper>
         <Screen value={calc.num} />
         <ButtonBox>
-          {buttons.flat().map((btn) => {
+          {buttons.flat().map((btn, index) => {
             return (
               <Button
                 className={btn === "=" ? "equals" : ""}
@@ -76,17 +91,18 @@ function App() {
                   btn === "C"
                     ? resetClickHandler()
                     : btn === "+-"
-                    ? invertClickHandler
+                    ? invertClickHandler()
                     : btn === "%"
-                    ? percentClickHandler
+                    ? percentClickHandler()
                     : btn === "="
                     ? equalsClickHandler()
                     : btn === "/" || btn === "X" || btn === "-" || btn === "+"
                     ? signClickHandler(btn)
                     : btn === "."
-                    ? commaClickHandler
+                    ? commaClickHandler()
                     : handleClick(btn);
                 }}
+                key={index}
               />
             );
           })}
