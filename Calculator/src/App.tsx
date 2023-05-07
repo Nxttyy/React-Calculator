@@ -15,22 +15,77 @@ function App() {
   ];
 
   let [screenValue, setScreenValue] = useState(0);
+  let [calc, setCalc] = useState({ num: 0, res: 0, sign: "" });
   const handleClick = (value) => {
-    setScreenValue(value);
+    // if (!calc.sign && calc.num) {
+    //   setCalc({ ...calc, num: value });
+    // }
+    setCalc({
+      ...calc,
+      num: Number(String(calc.num) + String(value)),
+    });
+
+    // setScreenValue(calc.num);
+  };
+
+  const resetClickHandler = () => {
+    setCalc({ ...calc, num: 0, sign: "", res: 0 });
+    // setScreenValue(0);
+  };
+
+  const signClickHandler = (value) => {
+    setCalc({ ...calc, sign: value, num: 0, res: calc.num });
+    // setScreenValue(calc.sign);
+  };
+
+  const equalsClickHandler = () => {
+    if (calc.sign && calc.num) {
+      const math = (a, b, sign) =>
+        sign === "+"
+          ? a + b
+          : sign === "-"
+          ? a - b
+          : sign === "X"
+          ? a * b
+          : a / b;
+
+      setCalc({
+        ...calc,
+        num:
+          calc.num === "0" && calc.sign === "/"
+            ? "Can't divide with 0"
+            : math(Number(calc.res), Number(calc.num), calc.sign),
+        sign: "",
+        res: 0,
+      });
+      // setScreenValue(calc.num);
+    }
   };
 
   return (
     <>
       <Wrapper>
-        <Screen value={screenValue} />
+        <Screen value={calc.num} />
         <ButtonBox>
-          {buttons.flat().map((button) => {
+          {buttons.flat().map((btn) => {
             return (
               <Button
-                className={button === "=" ? "equals" : ""}
-                value={button}
+                className={btn === "=" ? "equals" : ""}
+                value={btn}
                 onClick={() => {
-                  handleClick(button);
+                  btn === "C"
+                    ? resetClickHandler()
+                    : btn === "+-"
+                    ? invertClickHandler
+                    : btn === "%"
+                    ? percentClickHandler
+                    : btn === "="
+                    ? equalsClickHandler()
+                    : btn === "/" || btn === "X" || btn === "-" || btn === "+"
+                    ? signClickHandler(btn)
+                    : btn === "."
+                    ? commaClickHandler
+                    : handleClick(btn);
                 }}
               />
             );
